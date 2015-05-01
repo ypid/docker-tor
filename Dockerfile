@@ -25,7 +25,12 @@ ADD ./torrc /etc/torrc
 # Allow you to upgrade your relay without having to regenerate keys
 VOLUME /var/lib/tor
 
+VOLUME /.tor
+# Legacy … can be removed when all users have updated and run the new container once.
+
 # Generate a random nickname for the relay
 RUN echo "Nickname docker$(head -c 16 /dev/urandom  | sha1sum | cut -c1-10)" >> /etc/torrc
+ADD bootstrap.sh /usr/bin/
+RUN chmod +x /usr/bin/bootstrap.sh
 
-CMD /usr/bin/tor -f /etc/torrc
+CMD /usr/bin/bootstrap.sh
